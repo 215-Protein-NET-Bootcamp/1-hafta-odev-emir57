@@ -14,11 +14,11 @@ namespace InterestApi.Features.Queries.Interest
         {
             return await Task.Run(() =>
             {
-                int total = request.DesiredAmount * _interestOptions.InterestRate * request.MaturityAmount;
+                int totalPrice = request.DesiredAmount * _interestOptions.InterestRate/100 * request.MaturityAmount;
                 return new CalculateInterestSuccessQueryResponse
                 {
-                    TotalPaymentAmount = total,
-                    TotalInterestAmount = total - request.DesiredAmount
+                    TotalPaymentAmount = totalPrice,
+                    TotalInterestAmount = totalPrice - request.DesiredAmount
                 };
             });
         }
