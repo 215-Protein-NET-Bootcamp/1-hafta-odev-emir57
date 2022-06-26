@@ -30,7 +30,11 @@ namespace InterestApi.Features.Queries.Interest
                 };
             });
         }
-
+        /// <summary>
+        /// Validasyon metotlarını çalıştırır. Sonuç false olursa hata objesini döndürür aksi halde null döndürür.
+        /// </summary>
+        /// <param name="logics">Validasyon Metotları</param>
+        /// <returns></returns>
         private CalculateInterestQueryResponse RunValidations(params CalculateInterestQueryResponse[] logics)
         {
             foreach (var logic in logics)
@@ -40,28 +44,44 @@ namespace InterestApi.Features.Queries.Interest
             }
             return null;
         }
-
+        /// <summary>
+        /// İstenen miktar null veya sıfır ise hata döndürür
+        /// </summary>
+        /// <param name="desiredAmount">İstenen Miktar</param>
+        /// <returns></returns>
         private CalculateInterestQueryResponse CheckNullDesiredAmount(int desiredAmount)
         {
             if (desiredAmount == null || desiredAmount == 0)
                 return new CalculateInterestErrorQueryResponse(_interestOptions.DesiredAmountNullError);
             return new CalculateInterestSuccessQueryResponse();
         }
-
+        /// <summary>
+        /// Istenen miktar sıfırdan küçük ise hata döndürür
+        /// </summary>
+        /// <param name="desiredAmount">İstene Miktar</param>
+        /// <returns></returns>
         private CalculateInterestQueryResponse CheckNegativeDesiredAmount(int desiredAmount)
         {
             if (desiredAmount < 0)
                 return new CalculateInterestErrorQueryResponse(_interestOptions.DesiredAmountNegativeError);
             return new CalculateInterestSuccessQueryResponse();
         }
-
+        /// <summary>
+        /// Vade tutarı null veya 0 ise hata döndürür
+        /// </summary>
+        /// <param name="maturityAmount">Vade Tutarı</param>
+        /// <returns></returns>
         private CalculateInterestQueryResponse CheckNullMaturityAmount(int maturityAmount)
         {
             if (maturityAmount == null || maturityAmount == 0)
                 return new CalculateInterestErrorQueryResponse(_interestOptions.MaturityAmountNullError);
             return new CalculateInterestSuccessQueryResponse();
         }
-
+        /// <summary>
+        /// Vade tutarı sıfırdan küçük ise hata döndürür
+        /// </summary>
+        /// <param name="maturityAmount">Vade Tutarı</param>
+        /// <returns></returns>
         private CalculateInterestQueryResponse CheckNegativeMaturityAmount(int maturityAmount)
         {
             if (maturityAmount < 0)
