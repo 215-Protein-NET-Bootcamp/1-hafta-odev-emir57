@@ -14,7 +14,7 @@ namespace InterestApi.Features.Queries.Interest
         {
             return await Task.Run(() =>
             {
-                int totalPrice = request.DesiredAmount * _interestOptions.InterestRate/100 * request.MaturityAmount;
+                int totalPrice = request.DesiredAmount * _interestOptions.InterestRate / 100 * request.MaturityAmount;
                 return new CalculateInterestSuccessQueryResponse
                 {
                     TotalPaymentAmount = totalPrice,
@@ -35,8 +35,30 @@ namespace InterestApi.Features.Queries.Interest
 
         private CalculateInterestQueryResponse CheckNullDesiredAmount(int desiredAmount)
         {
-            if(desiredAmount == null || desiredAmount == 0)
-                return new CalculateInterestErrorQueryResponse()
+            if (desiredAmount == null || desiredAmount == 0)
+                return new CalculateInterestErrorQueryResponse(_interestOptions.DesiredAmountNullError);
+            return new CalculateInterestSuccessQueryResponse();
+        }
+
+        private CalculateInterestQueryResponse CheckNegativeDesiredAmount(int desiredAmount)
+        {
+            if (desiredAmount < 0)
+                return new CalculateInterestErrorQueryResponse(_interestOptions.DesiredAmountNegativeError);
+            return new CalculateInterestSuccessQueryResponse();
+        }
+
+        private CalculateInterestQueryResponse CheckNullMaturityAmount(int maturityAmount)
+        {
+            if (maturityAmount == null || maturityAmount == 0)
+                return new CalculateInterestErrorQueryResponse(_interestOptions.MaturityAmountNullError);
+            return new CalculateInterestSuccessQueryResponse();
+        }
+
+        private CalculateInterestQueryResponse CheckNegativeMaturityAmount(int maturityAmount)
+        {
+            if (maturityAmount < 0)
+                return new CalculateInterestErrorQueryResponse(_interestOptions.MaturityAmountNegativeError);
+            return new CalculateInterestSuccessQueryResponse();
         }
     }
 }
