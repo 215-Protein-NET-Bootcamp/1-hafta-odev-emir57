@@ -23,7 +23,7 @@
     }
     public class CalculateInterestErrorQueryResponse : CalculateInterestQueryResponse
     {
-        public string Message { get; set; }
+        public string Message { get; }
         public CalculateInterestErrorQueryResponse(string message) : this()
         {
             Message = message;
