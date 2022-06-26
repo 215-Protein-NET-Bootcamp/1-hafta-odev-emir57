@@ -38,10 +38,9 @@ namespace InterestApi.Features.Queries.Interest
         private CalculateInterestQueryResponse RunValidations(params CalculateInterestQueryResponse[] logics)
         {
             foreach (var logic in logics)
-            {
                 if (logic.Succeeded == false)
                     return logic;
-            }
+
             return null;
         }
         /// <summary>
