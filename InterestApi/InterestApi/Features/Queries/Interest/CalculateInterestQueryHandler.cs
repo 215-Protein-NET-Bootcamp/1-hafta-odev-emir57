@@ -10,9 +10,17 @@ namespace InterestApi.Features.Queries.Interest
         {
             _interestOptions = configuration.GetSection("InterestsOptions").Get<InterestsOptions>();
         }
-        public Task<CalculateInterestQueryResponse> Handle(CalculateInterestQueryRequest request, CancellationToken cancellationToken)
+        public async Task<CalculateInterestQueryResponse> Handle(CalculateInterestQueryRequest request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return await Task.Run(() =>
+            {
+                int total = request.DesiredAmount * _interestOptions.InterestRate * request.MaturityAmount;
+                return new CalculateInterestSuccessQueryResponse
+                {
+                    TotalPaymentAmount = total,
+                    TotalInterestAmount = total - request.DesiredAmount
+                };
+            });
         }
     }
 }
