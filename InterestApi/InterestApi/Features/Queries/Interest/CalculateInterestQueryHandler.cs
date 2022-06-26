@@ -22,5 +22,21 @@ namespace InterestApi.Features.Queries.Interest
                 };
             });
         }
+
+        private CalculateInterestQueryResponse RunValidations(params CalculateInterestQueryResponse[] logics)
+        {
+            foreach (var logic in logics)
+            {
+                if (logic.Succeeded == false)
+                    return logic;
+            }
+            return null;
+        }
+
+        private CalculateInterestQueryResponse CheckNullDesiredAmount(int desiredAmount)
+        {
+            if(desiredAmount == null || desiredAmount == 0)
+                return new CalculateInterestErrorQueryResponse()
+        }
     }
 }
