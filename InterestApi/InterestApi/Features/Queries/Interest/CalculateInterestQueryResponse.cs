@@ -1,4 +1,4 @@
-﻿namespace InterestApi.Features.Queries
+﻿namespace InterestApi.Features.Queries.Interest
 {
     public class CalculateInterestQueryResponse
     {

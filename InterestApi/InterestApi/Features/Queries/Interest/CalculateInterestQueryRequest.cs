@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace InterestApi.Features.Queries
+namespace InterestApi.Features.Queries.Interest
 {
     public class CalculateInterestQueryRequest : IRequest<CalculateInterestQueryResponse>
     {
