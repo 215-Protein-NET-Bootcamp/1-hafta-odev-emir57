@@ -14,6 +14,14 @@ namespace InterestApi.Features.Queries.Interest
         {
             return await Task.Run(() =>
             {
+                var result = RunValidations(
+                    CheckNullDesiredAmount(request.DesiredAmount),
+                    CheckNegativeDesiredAmount(request.DesiredAmount),
+                    CheckNullMaturityAmount(request.MaturityAmount),
+                    CheckNegativeMaturityAmount(request.MaturityAmount)
+                    );
+                if (result != null)
+                    return result;
                 int totalPrice = request.DesiredAmount * _interestOptions.InterestRate / 100 * request.MaturityAmount;
                 return new CalculateInterestSuccessQueryResponse
                 {
