@@ -90,8 +90,9 @@ namespace InterestApi.Controllers
         /// <returns></returns>
         private IValidationResult CheckMinDesiredAmount(int desiredAmount)
         {
+            string errorMessage = String.Format(_interestOptions.DesiredAmountMinValueError, _interestOptions.DesiredAmountMinValue);
             if (desiredAmount < _interestOptions.DesiredAmountMinValue)
-                return new ErrorValidationResult(_interestOptions.DesiredAmountMinValueError);
+                return new ErrorValidationResult(errorMessage);
             return new SuccessValidationResult();
         }
         /// <summary>
