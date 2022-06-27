@@ -28,7 +28,8 @@ namespace InterestApi.Controllers
                 CheckNullDesiredAmount(request.DesiredAmount),
                 CheckNegativeDesiredAmount(request.DesiredAmount),
                 CheckNullMaturityAmount(request.MaturityAmount),
-                CheckNegativeMaturityAmount(request.MaturityAmount));
+                CheckNegativeMaturityAmount(request.MaturityAmount),
+                CheckMinDesiredAmount(request.DesiredAmount));
             if (result != null)
                 return BadRequest(result);
             var response = CalculateInterest(request);
@@ -42,7 +43,8 @@ namespace InterestApi.Controllers
                 CheckNullDesiredAmount(request.DesiredAmount),
                 CheckNegativeDesiredAmount(request.DesiredAmount),
                 CheckNullMaturityAmount(request.MaturityAmount),
-                CheckNegativeMaturityAmount(request.MaturityAmount));
+                CheckNegativeMaturityAmount(request.MaturityAmount),
+                CheckMinDesiredAmount(request.DesiredAmount));
             if (result != null)
                 return BadRequest(result);
             var response = CalculateInterest(request);
@@ -79,6 +81,17 @@ namespace InterestApi.Controllers
         {
             if (desiredAmount < 0)
                 return new ErrorValidationResult(_interestOptions.DesiredAmountNegativeError);
+            return new SuccessValidationResult();
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="maturityAmount"></param>
+        /// <returns></returns>
+        private IValidationResult CheckMinDesiredAmount(int desiredAmount)
+        {
+            if (desiredAmount < _interestOptions.DesiredAmountMinValue)
+                return new ErrorValidationResult(_interestOptions.DesiredAmountMinValueError);
             return new SuccessValidationResult();
         }
         /// <summary>
