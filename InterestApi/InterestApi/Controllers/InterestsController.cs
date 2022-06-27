@@ -6,6 +6,7 @@ using InterestApi.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace InterestApi.Controllers
 {
@@ -14,9 +15,9 @@ namespace InterestApi.Controllers
     public class InterestsController : ControllerBase
     {
         private readonly InterestsOptions _interestOptions;
-        public InterestsController(InterestsOptions interestOptions)
+        public InterestsController(IConfiguration configuration)
         {
-            _interestOptions = interestOptions;
+            _interestOptions = configuration.GetSection("InterestsOptions").Get<InterestsOptions>();
         }
 
         [HttpPost("[action]")]
