@@ -21,7 +21,7 @@ namespace InterestApi.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Calculate(InterestRequest request)
+        public async Task<IActionResult> Calculate([FromBody] InterestRequest request)
         {
             var result = RunValidations(
                 CheckNullDesiredAmount(request.DesiredAmount),
@@ -35,7 +35,7 @@ namespace InterestApi.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> PaymentPlan(InterestRequest request)
+        public async Task<IActionResult> PaymentPlan([FromBody] InterestRequest request)
         {
             var result = RunValidations(
                 CheckNullDesiredAmount(request.DesiredAmount),
