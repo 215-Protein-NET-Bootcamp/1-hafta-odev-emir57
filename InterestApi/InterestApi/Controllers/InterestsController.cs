@@ -93,7 +93,7 @@ namespace InterestApi.Controllers
             return new SuccessValidationResult();
         }
         /// <summary>
-        /// 
+        /// İstenen miktar minimum değerden küçük ise hata döndürür
         /// </summary>
         /// <param name="maturityAmount"></param>
         /// <returns></returns>
