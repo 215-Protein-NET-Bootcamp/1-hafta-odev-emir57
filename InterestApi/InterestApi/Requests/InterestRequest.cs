@@ -1,8 +1,6 @@
-﻿using MediatR;
-
-namespace InterestApi.Features.Queries.Interest
+﻿namespace InterestApi.Requests
 {
-    public class CalculateInterestQueryRequest : IRequest<CalculateInterestQueryResponse>
+    public class InterestRequest
     {
         /// <summary>
         /// Vade Tutarı

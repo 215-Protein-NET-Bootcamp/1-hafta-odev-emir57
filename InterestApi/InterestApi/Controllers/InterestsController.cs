@@ -1,4 +1,8 @@
-﻿using InterestApi.Features.Queries.Interest;
+﻿using InterestApi.Abstract.Validation;
+using InterestApi.Concrete.Validation;
+using InterestApi.Entities;
+using InterestApi.Requests;
+using InterestApi.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,26 +13,107 @@ namespace InterestApi.Controllers
     [ApiController]
     public class InterestsController : ControllerBase
     {
-        private readonly IMediator _mediator;
-        public InterestsController(IMediator mediator)
+        private readonly InterestsOptions _interestOptions;
+        public InterestsController(InterestsOptions interestOptions)
         {
-            _mediator = mediator;
+            _interestOptions = interestOptions;
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Calculate(CalculateInterestQueryRequest request)
+        public async Task<IActionResult> Calculate(InterestRequest request)
         {
-            var response = await _mediator.Send(request);
+            var result = RunValidations(
+                CheckNullDesiredAmount(request.DesiredAmount),
+                CheckNegativeDesiredAmount(request.DesiredAmount),
+                CheckNullMaturityAmount(request.MaturityAmount),
+                CheckNegativeMaturityAmount(request.MaturityAmount));
+            if (result != null)
+                return BadRequest(result);
+            var response = CalculateInterest(request);
             return Ok(response);
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> PaymentPlan(CalculateInterestQueryRequest request)
+        public async Task<IActionResult> PaymentPlan(InterestRequest request)
         {
-            var response = await _mediator.Send(request);
-            if (response.Succeeded == false)
-                return Ok(response);
-            return Ok(response);
+            var result = RunValidations(
+                CheckNullDesiredAmount(request.DesiredAmount),
+                CheckNegativeDesiredAmount(request.DesiredAmount),
+                CheckNullMaturityAmount(request.MaturityAmount),
+                CheckNegativeMaturityAmount(request.MaturityAmount));
+            if (result != null)
+                return BadRequest(result);
+            var response = CalculateInterest(request);
+            return Ok();
         }
+
+        private CalculateInterestResponse CalculateInterest(InterestRequest request)
+        {
+            int totalPrice = request.DesiredAmount * _interestOptions.InterestRate / 100 * request.MaturityAmount;
+            return new CalculateInterestResponse
+            {
+                TotalPaymentAmount = totalPrice,
+                TotalInterestAmount = totalPrice - request.DesiredAmount
+            };
+        }
+
+        /// <summary>
+        /// Validasyon metotlarını çalıştırır. Sonuç false olursa hata objesini döndürür aksi halde null döndürür.
+        /// </summary>
+        /// <param name="logics">Validasyon Metotları</param>
+        /// <returns></returns>
+        private IValidationResult RunValidations(params IValidationResult[] logics)
+        {
+            foreach (var logic in logics)
+                if (logic.Succeeded == false)
+                    return logic;
+
+            return null;
+        }
+        /// <summary>
+        /// İstenen miktar null veya sıfır ise hata döndürür
+        /// </summary>
+        /// <param name="desiredAmount">İstenen Miktar</param>
+        /// <returns></returns>
+        private IValidationResult CheckNullDesiredAmount(int desiredAmount)
+        {
+            if (desiredAmount == null || desiredAmount == 0)
+                return new ErrorValidationResult(_interestOptions.DesiredAmountNullError);
+            return new SuccessValidationResult();
+        }
+        /// <summary>
+        /// Istenen miktar sıfırdan küçük ise hata döndürür
+        /// </summary>
+        /// <param name="desiredAmount">İstene Miktar</param>
+        /// <returns></returns>
+        private IValidationResult CheckNegativeDesiredAmount(int desiredAmount)
+        {
+            if (desiredAmount < 0)
+                return new ErrorValidationResult(_interestOptions.DesiredAmountNegativeError);
+            return new SuccessValidationResult();
+        }
+        /// <summary>
+        /// Vade tutarı null veya 0 ise hata döndürür
+        /// </summary>
+        /// <param name="maturityAmount">Vade Tutarı</param>
+        /// <returns></returns>
+        private IValidationResult CheckNullMaturityAmount(int maturityAmount)
+        {
+            if (maturityAmount == null || maturityAmount == 0)
+                return new ErrorValidationResult(_interestOptions.MaturityAmountNullError);
+            return new SuccessValidationResult();
+        }
+        /// <summary>
+        /// Vade tutarı sıfırdan küçük ise hata döndürür
+        /// </summary>
+        /// <param name="maturityAmount">Vade Tutarı</param>
+        /// <returns></returns>
+        private IValidationResult CheckNegativeMaturityAmount(int maturityAmount)
+        {
+            if (maturityAmount < 0)
+                return new ErrorValidationResult(_interestOptions.MaturityAmountNegativeError);
+            return new SuccessValidationResult();
+        }
+
     }
 }
