@@ -40,7 +40,11 @@ namespace InterestApi.Controllers
             var response = CalculateInterest(request);
             return Ok();
         }
-
+        /// <summary>
+        /// Faiz hesaplama fonksiyonu
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         private CalculateInterestResponse CalculateInterest(InterestRequest request)
         {
             double totalPrice = request.DesiredAmount + (request.DesiredAmount * _interestOptions.InterestRate / 100 * request.MaturityAmount);
