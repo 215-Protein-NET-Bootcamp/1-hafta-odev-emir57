@@ -1,6 +1,7 @@
 ﻿using InterestApi.Abstract.Validation;
 using InterestApi.Concrete.Validation;
 using InterestApi.Entities;
+using InterestApi.Helpers;
 using InterestApi.Requests;
 using InterestApi.Responses;
 using MediatR;
@@ -23,7 +24,7 @@ namespace InterestApi.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Calculate([FromBody] InterestRequest request)
         {
-            var result = RunValidations(
+            var result = ValidationHelper.Run(
                 CheckNullDesiredAmount(request.DesiredAmount),
                 CheckNegativeDesiredAmount(request.DesiredAmount),
                 CheckNullMaturityAmount(request.MaturityAmount),
@@ -37,7 +38,7 @@ namespace InterestApi.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> PaymentPlan([FromBody] InterestRequest request)
         {
-            var result = RunValidations(
+            var result = ValidationHelper.Run(
                 CheckNullDesiredAmount(request.DesiredAmount),
                 CheckNegativeDesiredAmount(request.DesiredAmount),
                 CheckNullMaturityAmount(request.MaturityAmount),
@@ -58,19 +59,6 @@ namespace InterestApi.Controllers
             };
         }
 
-        /// <summary>
-        /// Validasyon metotlarını çalıştırır. Sonuç false olursa hata objesini döndürür aksi halde null döndürür.
-        /// </summary>
-        /// <param name="logics">Validasyon Metotları</param>
-        /// <returns></returns>
-        private IValidationResult RunValidations(params IValidationResult[] logics)
-        {
-            foreach (var logic in logics)
-                if (logic.Succeeded == false)
-                    return logic;
-
-            return null;
-        }
         /// <summary>
         /// İstenen miktar null veya sıfır ise hata döndürür
         /// </summary>
