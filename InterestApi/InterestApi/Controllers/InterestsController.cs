@@ -50,7 +50,7 @@ namespace InterestApi.Controllers
 
         private CalculateInterestResponse CalculateInterest(InterestRequest request)
         {
-            int totalPrice = request.DesiredAmount * _interestOptions.InterestRate / 100 * request.MaturityAmount;
+            double totalPrice = request.DesiredAmount + (request.DesiredAmount * _interestOptions.InterestRate / 100 * request.MaturityAmount);
             return new CalculateInterestResponse
             {
                 TotalPaymentAmount = totalPrice,

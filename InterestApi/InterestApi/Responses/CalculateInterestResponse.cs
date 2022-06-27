@@ -5,11 +5,11 @@
         /// <summary>
         /// Toplam ödeme tutarı
         /// </summary>
-        public int TotalPaymentAmount { get; set; }
+        public double TotalPaymentAmount { get; set; }
 
         /// <summary>
         /// Toplam faiz tutarı
         /// </summary>
-        public int TotalInterestAmount { get; set; }
+        public double TotalInterestAmount { get; set; }
     }
 }
