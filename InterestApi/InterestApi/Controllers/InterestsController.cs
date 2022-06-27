@@ -24,12 +24,7 @@ namespace InterestApi.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Calculate([FromBody] InterestRequest request)
         {
-            var result = ValidationHelper.Run(
-                CheckNullDesiredAmount(request.DesiredAmount),
-                CheckNegativeDesiredAmount(request.DesiredAmount),
-                CheckNullMaturityAmount(request.MaturityAmount),
-                CheckNegativeMaturityAmount(request.MaturityAmount),
-                CheckMinDesiredAmount(request.DesiredAmount));
+            var result = ValidationResult(request);
             if (result != null)
                 return BadRequest(result);
             var response = CalculateInterest(request);
@@ -39,12 +34,7 @@ namespace InterestApi.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> PaymentPlan([FromBody] InterestRequest request)
         {
-            var result = ValidationHelper.Run(
-                CheckNullDesiredAmount(request.DesiredAmount),
-                CheckNegativeDesiredAmount(request.DesiredAmount),
-                CheckNullMaturityAmount(request.MaturityAmount),
-                CheckNegativeMaturityAmount(request.MaturityAmount),
-                CheckMinDesiredAmount(request.DesiredAmount));
+            var result = ValidationResult(request);
             if (result != null)
                 return BadRequest(result);
             var response = CalculateInterest(request);
@@ -59,6 +49,21 @@ namespace InterestApi.Controllers
                 TotalPaymentAmount = totalPrice,
                 TotalInterestAmount = totalPrice - request.DesiredAmount
             };
+        }
+
+        /// <summary>
+        /// Validasyonları tek bir yerden yönetebilmek için oluşturulan fonksiyon
+        /// </summary>
+        /// <param name="request">Parametrelerin geleceği nesne</param>
+        /// <returns></returns>
+        private IValidationResult ValidationResult(InterestRequest request)
+        {
+            return ValidationHelper.Run(
+                CheckNullDesiredAmount(request.DesiredAmount),
+                CheckNegativeDesiredAmount(request.DesiredAmount),
+                CheckNullMaturityAmount(request.MaturityAmount),
+                CheckNegativeMaturityAmount(request.MaturityAmount),
+                CheckMinDesiredAmount(request.DesiredAmount));
         }
 
         /// <summary>

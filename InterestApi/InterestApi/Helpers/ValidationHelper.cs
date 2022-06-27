@@ -5,7 +5,8 @@ namespace InterestApi.Helpers
     public class ValidationHelper
     {
         /// <summary>
-        /// Validasyon metotlarını çalıştırır. Sonuç false olursa hata objesini döndürür aksi halde null döndürür.
+        /// Parametre olarak girilen validasyon metotlarını çalıştırır. 
+        /// Sonuç false olursa hata objesini döndürür aksi halde null döndürür.
         /// </summary>
         /// <param name="logics">Validasyon Metotları</param>
         /// <returns></returns>
