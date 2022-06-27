@@ -15,10 +15,19 @@ namespace InterestApi.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost]
+        [HttpPost("[action]")]
         public async Task<IActionResult> Calculate(CalculateInterestQueryRequest request)
         {
             var response = await _mediator.Send(request);
+            return Ok(response);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> PaymentPlan(CalculateInterestQueryRequest request)
+        {
+            var response = await _mediator.Send(request);
+            if (response.Succeeded == false)
+                return Ok(response);
             return Ok(response);
         }
     }
