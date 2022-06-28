@@ -22,22 +22,24 @@ namespace InterestApi.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Calculate([FromBody] InterestRequest request)
+        public IActionResult Calculate([FromBody] InterestRequest request)
         {
             var result = ValidationResult(request);
             if (result != null)
                 return BadRequest(result);
-            var response = CalculateInterest(request);
+
+            CalculateInterestResponse response = CalculateInterest(request);
             return Ok(response);
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> PaymentPlan([FromBody] InterestRequest request)
+        public IActionResult PaymentPlan([FromBody] InterestRequest request)
         {
             var result = ValidationResult(request);
             if (result != null)
                 return BadRequest(result);
-            var response = CalculateInterest(request);
+
+            CalculateInterestResponse response = CalculateInterest(request);
             List<PaymentPlan> paymentPlans = CalculatePaymentPlan(response, request);
             return Ok(paymentPlans);
         }
