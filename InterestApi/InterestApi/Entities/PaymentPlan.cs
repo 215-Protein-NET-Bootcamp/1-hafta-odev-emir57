@@ -10,16 +10,16 @@
         /// <summary>
         /// Aylık ödenen miktar
         /// </summary>
-        public int AmountPaid { get; set; }
+        public double AmountPaid { get; set; }
 
         /// <summary>
         /// Kalan miktar
         /// </summary>
-        public int RemainingAmount { get; set; }
+        public double RemainingAmount { get; set; }
 
         /// <summary>
         /// Ödenen faiz
         /// </summary>
-        public int InterestPaid { get; set; }
+        public double InterestPaid { get; set; }
     }
 }

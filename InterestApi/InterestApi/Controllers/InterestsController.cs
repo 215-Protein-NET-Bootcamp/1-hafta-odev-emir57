@@ -38,7 +38,41 @@ namespace InterestApi.Controllers
             if (result != null)
                 return BadRequest(result);
             var response = CalculateInterest(request);
-            return Ok();
+            List<PaymentPlan> paymentPlans = CalculatePaymentPlan(response, request);
+            return Ok(paymentPlans);
+        }
+        /// <summary>
+        /// Aylık ödeme planı
+        /// </summary>
+        /// <param name="response"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        private List<PaymentPlan> CalculatePaymentPlan(CalculateInterestResponse response, InterestRequest request)
+        {
+            List<PaymentPlan> payments = new List<PaymentPlan>();
+            double remainingAmount = response.TotalPaymentAmount; //kalan miktar
+            int periodPayment = request.DesiredAmount / request.MaturityAmount; //aylık ödenen miktar(faizsiz)
+            for (byte i = 1; i < request.MaturityAmount + 1; i++)
+            {
+                double periodPaymentWithInterest = periodPayment + (periodPayment * _interestOptions.InterestRate / 100 * request.MaturityAmount); //aylık ödenen miktar(faizli)
+                double interestPaid = periodPayment * _interestOptions.InterestRate / 100; //ödenen faiz
+                remainingAmount -= periodPaymentWithInterest; // kalan miktardan aylık ödenen miktar çıkartılır
+                if (i == request.MaturityAmount) // son ayda isek kalan miktarın tamamı ödenir
+                {
+                    periodPaymentWithInterest = remainingAmount;
+                    interestPaid = periodPaymentWithInterest * _interestOptions.InterestRate / 100;
+                    remainingAmount = 0;
+                }
+                PaymentPlan paymentPlan = new PaymentPlan
+                {
+                    Period = i,
+                    AmountPaid = periodPaymentWithInterest,
+                    InterestPaid = interestPaid,
+                    RemainingAmount = remainingAmount
+                };
+                payments.Add(paymentPlan);
+            }
+            return payments;
         }
         /// <summary>
         /// Faiz hesaplama fonksiyonu
@@ -84,7 +118,7 @@ namespace InterestApi.Controllers
         /// <summary>
         /// Istenen miktar sıfırdan küçük ise hata döndürür
         /// </summary>
-        /// <param name="desiredAmount">İstene Miktar</param>
+        /// <param name="desiredAmount">İstenen Miktar</param>
         /// <returns></returns>
         private IValidationResult CheckNegativeDesiredAmount(int desiredAmount)
         {
@@ -95,7 +129,7 @@ namespace InterestApi.Controllers
         /// <summary>
         /// İstenen miktar minimum değerden küçük ise hata döndürür
         /// </summary>
-        /// <param name="maturityAmount"></param>
+        /// <param name="maturityAmount">İstenen Miktar</param>
         /// <returns></returns>
         private IValidationResult CheckMinDesiredAmount(int desiredAmount)
         {
