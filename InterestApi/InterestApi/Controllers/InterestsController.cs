@@ -56,10 +56,11 @@ namespace InterestApi.Controllers
             {
                 double periodPaymentWithInterest = periodPayment + (periodPayment * _interestOptions.InterestRate / 100 * request.MaturityAmount); //aylık ödenen miktar(faizli)
                 double interestPaid = periodPayment * _interestOptions.InterestRate / 100; //ödenen faiz
+                
                 remainingAmount -= periodPaymentWithInterest; // kalan miktardan aylık ödenen miktar çıkartılır
                 if (i == request.MaturityAmount) // son ayda isek kalan miktarın tamamı ödenir
                 {
-                    periodPaymentWithInterest = remainingAmount;
+                    periodPaymentWithInterest += remainingAmount;
                     interestPaid = periodPaymentWithInterest * _interestOptions.InterestRate / 100;
                     remainingAmount = 0;
                 }
