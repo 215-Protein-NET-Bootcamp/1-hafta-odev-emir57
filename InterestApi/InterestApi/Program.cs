@@ -11,7 +11,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddMediatR(typeof(InterestsController));
+//builder.Services.AddMediatR(typeof(InterestsController));
 
 var app = builder.Build();
 

@@ -66,14 +66,14 @@ namespace InterestApi.Controllers
                     interestPaid = periodPaymentWithInterest * _interestOptions.InterestRate / 100;
                     remainingAmount = 0;
                 }
-                PaymentPlan paymentPlan = new PaymentPlan
+                PaymentPlan paymentPlan = new PaymentPlan //payment plan objesi oluşturuluyor
                 {
                     Period = i,
                     AmountPaid = periodPaymentWithInterest,
                     InterestPaid = interestPaid,
                     RemainingAmount = remainingAmount
                 };
-                payments.Add(paymentPlan);
+                payments.Add(paymentPlan); // oluşturulan payment plan objesi listeye ekleniyor.
             }
             return payments;
         }
@@ -112,7 +112,7 @@ namespace InterestApi.Controllers
         /// </summary>
         /// <param name="desiredAmount">İstenen Miktar</param>
         /// <returns></returns>
-        private IValidationResult CheckNullDesiredAmount(int desiredAmount)
+        private IValidationResult CheckNullDesiredAmount(int? desiredAmount)
         {
             if (desiredAmount == null || desiredAmount == 0)
                 return new ErrorValidationResult(_interestOptions.DesiredAmountNullError);
@@ -123,7 +123,7 @@ namespace InterestApi.Controllers
         /// </summary>
         /// <param name="desiredAmount">İstenen Miktar</param>
         /// <returns></returns>
-        private IValidationResult CheckNegativeDesiredAmount(int desiredAmount)
+        private IValidationResult CheckNegativeDesiredAmount(int? desiredAmount)
         {
             if (desiredAmount < 0)
                 return new ErrorValidationResult(_interestOptions.DesiredAmountNegativeError);
@@ -134,7 +134,7 @@ namespace InterestApi.Controllers
         /// </summary>
         /// <param name="maturityAmount">İstenen Miktar</param>
         /// <returns></returns>
-        private IValidationResult CheckMinDesiredAmount(int desiredAmount)
+        private IValidationResult CheckMinDesiredAmount(int? desiredAmount)
         {
             string errorMessage = String.Format(_interestOptions.DesiredAmountMinValueError, _interestOptions.DesiredAmountMinValue);
             if (desiredAmount < _interestOptions.DesiredAmountMinValue)
@@ -146,7 +146,7 @@ namespace InterestApi.Controllers
         /// </summary>
         /// <param name="maturityAmount">Vade Tutarı</param>
         /// <returns></returns>
-        private IValidationResult CheckNullMaturityAmount(int maturityAmount)
+        private IValidationResult CheckNullMaturityAmount(int? maturityAmount)
         {
             if (maturityAmount == null || maturityAmount == 0)
                 return new ErrorValidationResult(_interestOptions.MaturityAmountNullError);
@@ -157,7 +157,7 @@ namespace InterestApi.Controllers
         /// </summary>
         /// <param name="maturityAmount">Vade Tutarı</param>
         /// <returns></returns>
-        private IValidationResult CheckNegativeMaturityAmount(int maturityAmount)
+        private IValidationResult CheckNegativeMaturityAmount(int? maturityAmount)
         {
             if (maturityAmount < 0)
                 return new ErrorValidationResult(_interestOptions.MaturityAmountNegativeError);
