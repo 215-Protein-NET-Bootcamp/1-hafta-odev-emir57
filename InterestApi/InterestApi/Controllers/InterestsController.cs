@@ -87,8 +87,8 @@ namespace InterestApi.Controllers
             double totalPrice = request.DesiredAmount + (request.DesiredAmount * _interestOptions.InterestRate / 100 * request.MaturityAmount);
             return new CalculateInterestResponse
             {
-                TotalPaymentAmount = totalPrice,
-                TotalInterestAmount = totalPrice - request.DesiredAmount
+                TotalPaymentAmount = totalPrice, //toplam geri ödenecek tutar
+                TotalInterestAmount = totalPrice - request.DesiredAmount //toplam ödenecek faiz tutarı
             };
         }
 
