@@ -52,28 +52,28 @@ namespace InterestApi.Controllers
         private List<PaymentPlan> CalculatePaymentPlan(CalculateInterestResponse response, InterestRequest request)
         {
             List<PaymentPlan> payments = new List<PaymentPlan>();
-            double remainingAmount = response.TotalPaymentAmount; //kalan miktar
-            int periodPayment = request.DesiredAmount / request.MaturityAmount; //aylık ödenen miktar(faizsiz)
+            double remainingAmount = response.TotalPaymentAmount;
+            int periodPayment = request.DesiredAmount / request.MaturityAmount;
             for (byte i = 1; i < request.MaturityAmount + 1; i++)
             {
-                double periodPaymentWithInterest = periodPayment + (periodPayment * _interestOptions.InterestRate / 100 * request.MaturityAmount); //aylık ödenen miktar(faizli)
-                double interestPaid = periodPayment * _interestOptions.InterestRate / 100; //ödenen faiz
+                double periodPaymentWithInterest = periodPayment + (periodPayment * _interestOptions.InterestRate / 100 * request.MaturityAmount);
+                double interestPaid = periodPayment * _interestOptions.InterestRate / 100;
                 
-                remainingAmount -= periodPaymentWithInterest; // kalan miktardan aylık ödenen miktar çıkartılır
-                if (i == request.MaturityAmount) // son ayda isek kalan miktarın tamamı ödenir
+                remainingAmount -= periodPaymentWithInterest;
+                if (i == request.MaturityAmount)
                 {
                     periodPaymentWithInterest += remainingAmount;
                     interestPaid = periodPaymentWithInterest * _interestOptions.InterestRate / 100;
                     remainingAmount = 0;
                 }
-                PaymentPlan paymentPlan = new PaymentPlan //payment plan objesi oluşturuluyor
+                PaymentPlan paymentPlan = new PaymentPlan 
                 {
                     Period = i,
                     AmountPaid = periodPaymentWithInterest,
                     InterestPaid = interestPaid,
                     RemainingAmount = remainingAmount
                 };
-                payments.Add(paymentPlan); // oluşturulan payment plan objesi listeye ekleniyor.
+                payments.Add(paymentPlan);
             }
             return payments;
         }
@@ -87,8 +87,8 @@ namespace InterestApi.Controllers
             double totalPrice = request.DesiredAmount + (request.DesiredAmount * _interestOptions.InterestRate / 100 * request.MaturityAmount);
             return new CalculateInterestResponse
             {
-                TotalPaymentAmount = totalPrice, //toplam geri ödenecek tutar
-                TotalInterestAmount = totalPrice - request.DesiredAmount //toplam ödenecek faiz tutarı
+                TotalPaymentAmount = totalPrice,
+                TotalInterestAmount = totalPrice - request.DesiredAmount
             };
         }
 
